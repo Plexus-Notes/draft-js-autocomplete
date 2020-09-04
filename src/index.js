@@ -18,7 +18,7 @@ import {
   isCurrentSelectionAnEntity
 } from './utils';
 
-console.log("In my autocomplete (Davey2)!!")
+console.log("In my autocomplete (Davey3)!!")
 
 class Autocomplete extends Component {
   static propTypes = {

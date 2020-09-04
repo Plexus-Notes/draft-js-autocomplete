@@ -18,12 +18,21 @@
     "react",
     "autocomplete"
   ],
+  "watch": {
+    "build": {
+      "patterns": [
+        "src"
+      ],
+      "extensions": "js,jsx"
+    }
+  },
   "scripts": {
     "start": "webpack --watch",
     "build": "webpack",
     "test": "jest --watch",
     "coverage": "jest --coverage",
-    "prepublish": "rm -rf ./dist && npm run build"
+    "prepublish": "rm -rf ./dist && npm run build",
+    "watch": "npm-watch"
   },
   "peerDependencies": {
     "draft-js": "^0.10.1",
