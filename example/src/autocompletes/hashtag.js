@@ -8,19 +8,17 @@ const hashtags = [
 
 const onMatch = (text) => hashtags.filter(hashtag => hashtag.indexOf(text) !== -1);
 
-const Hasthtag = ({ children }) => (
-  <span className="Hashtag">{children}</span>
-);
+// const Hasthtag = ({ children }) => (
+//   <span className="Hashtag">{children}</span>
+// );
 
-const List = ({ display, children }) => {
-  return (
-    <ul className="HashtagList">{children}</ul>
-  );
-};
+// const List = ({ display, children }) => (
+//     <ul className="HashtagList">{children}</ul>
+//   )
 
 const Item = ({ item, current, onClick }) => {
   let classNames = "HashtagListItem";
-  classNames+= current ? " current" : "";
+  classNames += current ? " current" : "";
   return (
     <li className={classNames} onClick={onClick}>
       {item}
@@ -33,8 +31,12 @@ const hashtag = {
   type: 'HASHTAG',
   mutability: 'IMMUTABLE',
   onMatch: onMatch,
-  component: Hasthtag,
-  listComponent: List,
+  component: ({ children }) => (
+    <span className="Hashtag">{children}</span>
+  ),
+  listComponent: ({ display, children }) => (
+    <ul className="HashtagList">{children}</ul>
+  ),
   itemComponent: Item,
   format: (item) => `#${item}`
 };
