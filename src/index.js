@@ -18,6 +18,8 @@ import {
   isCurrentSelectionAnEntity
 } from './utils';
 
+console.log("In my autocomplete (Davey)!!")
+
 class Autocomplete extends Component {
   static propTypes = {
     editorState: PropTypes.object.isRequired,
