@@ -27,6 +27,10 @@ const users = [
   }
 ];
 
+/**
+ * Produces an array of mentions to be suggested, given query text
+ * @param text text against which to query the possible nodes
+ */
 const onMatch = (text) => users.filter(user => {
   return user.lastname.indexOf(text) !== -1 || user.firstname.indexOf(text) !== -1
 });

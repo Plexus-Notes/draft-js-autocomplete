@@ -28,8 +28,8 @@ class App extends Component {
 
   onChange = (editorState) => {
     this.setState({ editorState })
-  };
-
+  }; 
+ 
   render() {
     const { editorState } = this.state;
 
