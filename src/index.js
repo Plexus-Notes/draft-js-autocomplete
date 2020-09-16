@@ -268,9 +268,12 @@ class Autocomplete extends Component {
 
     if (!match) return null;
 
-    const { suggestions, position } = match;
+    let { suggestions, position } = match;
 
-    if (!suggestions || suggestions.length === 0) return null;
+    if (!suggestions || suggestions.length === 0) {
+      return null
+    }
+    console.log('building list!!!')
 
     const List = match.listComponent;
     const Item = match.itemComponent;
