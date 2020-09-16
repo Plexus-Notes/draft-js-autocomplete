@@ -174,7 +174,7 @@ class Autocomplete extends Component {
     // Reset if text is empty
     if (isCurrentTextEmpty(editorState)) return this.resetMatch();
 
-    // Reset if selection is an entity
+    // Reset if selection (to 0) is an entity
     if (isCurrentSelectionAnEntity(editorState)) return this.resetMatch();
 
     // Reset if no match found
@@ -186,7 +186,8 @@ class Autocomplete extends Component {
     if (!autocomplete) return this.resetMatch();
 
     // Get suggestions from autocomplete onMatch property
-    const suggestions = await getSuggestions(autocomplete, match);
+    const allTextInEditor = editorState.getCurrentContent().getPlainText();
+    const suggestions = await getSuggestions(autocomplete, match, allTextInEditor);
 
     // Update position only if focus
     let position = this.state.match && this.state.match.position ? this.state.match.position : null;
@@ -419,10 +420,19 @@ class Autocomplete extends Component {
     const { keyBindingFn } = this.props;
     const { focus, match } = this.state;
 
+    // enter
     if (focus && match && e.keyCode === 13) {
       return 'add-entity';
     }
 
+    // if not enter, and a  key-binding-fn was passed as a prop to this whole component, 
+      // return the prop of e. Else, apply the default function to e.
+
+    // Lingering questions: when is keyBindingFn present and when is it not?
+    // Doesn't look like keyBindingFn is generally passed. Should look at default key binding fn instead.
+    // getDefaultKeyBinding is a draftJS function, so not going to go to much deeper here. 
+      // note: getDefaultKeyBinding must deal with special delete/mutability of entities, 
+        // as it's not dealt with up here in the body of this function but still does occur
     return keyBindingFn ? keyBindingFn(e) : getDefaultKeyBinding(e);
   }
 
@@ -430,6 +440,7 @@ class Autocomplete extends Component {
     const { handleKeyCommand } = this.props;
 
     if (command === 'add-entity') {
+      //how does this know which entity was selected
       this.addEntityWithSelectedSuggestion();
       return 'handled';
     }

@@ -22,7 +22,7 @@ const users = [
     lastname: 'Diana'
   },
   {
-    firstname: 'Peter',
+    firstname: 'Peterd',
     lastname: 'Parker'
   }
 ];

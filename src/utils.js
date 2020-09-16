@@ -5,7 +5,9 @@ import {
 
 /**
  * Get all regex matches on contentBlock and call callback on each match
- *
+ * I think this function gets all matches in the current text, doesn't return the list of results
+ * @TODO Edit this function to reflect new match mechanism.
+ *  Will involve changing regex to a different kind of function, potentially with same callback signatures.
  * @param regex
  * @param contentBlock
  * @param callback
@@ -14,7 +16,7 @@ import {
 export function findWithRegex(regex, contentBlock, callback) {
   const text = contentBlock.getText();
   let matchArr, matches = [];
-
+  console.log("args" , arguments)
   while ((matchArr = regex.exec(text)) !== null) {
     const start = matchArr.index;
     // We trim the match to remove last space
@@ -93,25 +95,30 @@ export function isCurrentSelectionAnEntity(editorState) {
  * Get a match depends on selection
  *
  * @param editorState
- * @param matches
+ * @param matches **consist of all mentions and mention-candidate-phrases 
+ *  in the text-editor
  * @returns {*}
  */
 export function getMatch(editorState, matches) {
   const selectionState = editorState.getSelection();
   const anchorKey = selectionState.getAnchorKey();
 
-  // No matches for this block no need to continue
+  console.log('matches', Object.values(matches)[0])
+  // If no matches for this block, no need to continue
   if (!matches[anchorKey]) return null;
   const currentBlockMatches = matches[anchorKey];
 
+  //the index where the cursor currently is blinking
   const startOffset = selectionState.getStartOffset();
+
+  console.log('start offSet', startOffset)
 
   // For all matches in this block, we reduce all types
   // to get the first match, return null if no match found
   return Object.keys(currentBlockMatches).reduce((previous, type) => {
     // Only if no match found yet
     if (previous === null) {
-      // Reduce all matches to get the first one that is in selection
+      // Reduce all matches to get the first one that is in selection range
       // return null if no match found
       return currentBlockMatches[type].reduce((previous, match) => {
         const inOffset = (startOffset >= match.start && startOffset <= match.end);
@@ -141,16 +148,22 @@ export function getAutocomplete(autocompletes, match) {
 
 /**
  * Get suggestions from onMatch autocomplete config method
- *
+ * @TODO expose all text in editor to this function
  * @param autocomplete
  * @param match
  * @returns {Promise<*>}
  */
-export async function getSuggestions(autocomplete, match) {
+export async function getSuggestions(autocomplete, match, allTextInEditor) {
   if (typeof autocomplete.onMatch !== 'function') return [];
   // Call onMatch method for found autocomplete
+  console.log("match object (should contain text)", match)
+  console.log('autocomplete object.', autocomplete)
+  console.log("allTextInEditor from getSuggestions", allTextInEditor)
+  // return []
+  // return [{firstname: "da", lastname: 'Morse'}, {firstname: "Mon", lastname: "Day"}]
   try {
-    return await autocomplete.onMatch(match.text);
+    var x = await autocomplete.onMatch(allTextInEditor, match)
+    return x
   } catch(e) {
     return [];
   }
