@@ -180,18 +180,30 @@ class Autocomplete extends Component {
     // Reset if no match found
     let match = getMatch(editorState, matches);
 
-    console.log('before null check', match)
+    // Selection state
+    
+    //where the cursor currently is
+    const selectionState = editorState.getSelection();
+    const anchorKey = selectionState.getAnchorKey();
+    const startOffset = selectionState.getStartOffset();
 
-    // if (!match) return this.resetMatch();
-    if (!match) {
-      match = {
-        text: "",
-        start: 1, end: 2,
-        type: "CONCEPT"
-      }
-    }
 
-    console.log('after match', match)
+    console.log('matches', Object.values(matches)[0])
+    // If no matches for this block, no need to continue
+    if (!matches[anchorKey]) return null;
+    // const currentBlockMatches = matches[anchorKey];
+  
+    //the index where the cursor currently is blinking
+
+    if (!match) return this.resetMatch();
+    // if (!match) {
+    //   match = {
+    //     text: "",
+    //     start: 0, 
+    //     end: startOffset,
+    //     type: "CONCEPT"
+    //   }
+    // }
 
     // Reset if no autocomplete config found for this match
     const autocomplete = getAutocomplete(autocompletes, match);
