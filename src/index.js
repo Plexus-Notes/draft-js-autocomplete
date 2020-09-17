@@ -178,8 +178,20 @@ class Autocomplete extends Component {
     if (isCurrentSelectionAnEntity(editorState)) return this.resetMatch();
 
     // Reset if no match found
-    const match = getMatch(editorState, matches);
-    if (!match) return this.resetMatch();
+    let match = getMatch(editorState, matches);
+
+    console.log('before null check', match)
+
+    // if (!match) return this.resetMatch();
+    if (!match) {
+      match = {
+        text: "",
+        start: 1, end: 2,
+        type: "CONCEPT"
+      }
+    }
+
+    console.log('after match', match)
 
     // Reset if no autocomplete config found for this match
     const autocomplete = getAutocomplete(autocompletes, match);
@@ -267,8 +279,9 @@ class Autocomplete extends Component {
     const { focus, match, selectedSuggestion } = this.state;
 
     if (!match) return null;
+    console.log('nonnull match', match)
 
-    let { suggestions, position } = match;
+    const { suggestions, position } = match;
 
     if (!suggestions || suggestions.length === 0) {
       return null
