@@ -18,8 +18,6 @@ import {
   isCurrentSelectionAnEntity
 } from './utils';
 
-console.log("In my autocomplete (Davey3)!!")
-
 class Autocomplete extends Component {
   static propTypes = {
     editorState: PropTypes.object.isRequired,
@@ -100,13 +98,15 @@ class Autocomplete extends Component {
         strategy: this.createEntityStrategy(autocomplete.type),
         component: autocomplete.component
       };
-      const autocompleteStrategy = {
-        strategy: this.createAutocompleteStrategy(autocomplete),
-        component: ({ children }) => (
-          <span>{children}</span>
-        )
-      };
-      previous.push(entityStrategy, autocompleteStrategy);
+      // const autocompleteStrategy = {
+      //   strategy: this.createAutocompleteStrategy(autocomplete),
+      //   component: ({ children }) => (
+      //     <span>{children}</span>
+      //   )
+      // };
+      previous.push(entityStrategy, 
+        // autocompleteStrategy
+        );
       return previous;
     }, existingDecorators ? existingDecorators._decorators : []);
 
@@ -177,6 +177,11 @@ class Autocomplete extends Component {
     // Reset if selection (to 0) is an entity
     if (isCurrentSelectionAnEntity(editorState)) return this.resetMatch();
 
+    // If no matches for this block, no need to continue
+    // const anchorKey = selectionState.getAnchorKey();
+    // if (!matches[anchorKey]) return null;
+
+
     // Reset if no match found
     let match = getMatch(editorState, matches);
 
@@ -184,26 +189,28 @@ class Autocomplete extends Component {
     
     //where the cursor currently is
     const selectionState = editorState.getSelection();
-    const anchorKey = selectionState.getAnchorKey();
-    const startOffset = selectionState.getStartOffset();
 
 
     console.log('matches', Object.values(matches)[0])
-    // If no matches for this block, no need to continue
-    if (!matches[anchorKey]) return null;
+
+    const startOffset = selectionState.getStartOffset();
+    if (!match) {
+      match = {
+        text: "",
+        start: 0, 
+        end: startOffset,
+        type: "CONCEPT"
+      }
+    }
+
+   
     // const currentBlockMatches = matches[anchorKey];
   
     //the index where the cursor currently is blinking
 
-    if (!match) return this.resetMatch();
-    // if (!match) {
-    //   match = {
-    //     text: "",
-    //     start: 0, 
-    //     end: startOffset,
-    //     type: "CONCEPT"
-    //   }
-    // }
+
+    // if (!match) return this.resetMatch();
+    
 
     // Reset if no autocomplete config found for this match
     const autocomplete = getAutocomplete(autocompletes, match);
