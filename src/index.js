@@ -9,7 +9,7 @@ import {
 
 import {
   findWithRegex,
-  getSuggestions,
+  // getSuggestions,
   addEntityToEditorState,
   getMatch,
   getAutocomplete,
@@ -155,9 +155,16 @@ class Autocomplete extends Component {
       // const reg = /\b(\S*)\b/
 
       // const reg = /(?<=(a))/g
-      // const reg = /((?<=\s) | ^)|(\S*)/
+      // const reg = /((\s) | ^)|(\S+)/g
 
-      const reg = new RegExp(String.raw({raw: `(\\s|^)(\\S*)`}), 'g')
+      //this one is close to working:
+      // const reg = RegExp('((?<=(\\s)))(\\S+)', 'g');
+
+      //this only works when the findWithRegex function uses 
+        //the first item in the result array as the match text
+      const reg = RegExp('(?<=(\\s)|^)(\\S+)', 'g');
+
+      // const reg = new RegExp(String.raw({raw: `(\\s|^)(\\S*)`}), 'g')
       // const reg = new RegExp(String.raw({raw: `((?<=\\s) | ^)|(\\S*)`}), 'g')
       const result = findWithRegex(reg, contentBlock, callback);
       const { matches } = this.state;
@@ -202,7 +209,7 @@ class Autocomplete extends Component {
     let match = getMatch(editorState, matches);
     console.log("The match found", match)
     //where the cursor currently is
-    const startOffset = editorState.getSelection().getStartOffset();
+    // const startOffset = editorState.getSelection().getStartOffset();
     if (!match) {
       return this.resetMatch();
     // match = {

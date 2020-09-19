@@ -17,6 +17,7 @@ export function findWithRegex(regex, contentBlock, callback) {
   const text = contentBlock.getText();
   let matchArr, matches = [];
   while ((matchArr = regex.exec(text)) !== null) {
+    console.log('while in regex...', matchArr)
     const start = matchArr.index;
     // We trim the match to remove last space
     const length = matchArr[0].trim().length;
@@ -24,9 +25,10 @@ export function findWithRegex(regex, contentBlock, callback) {
     callback(start, start + length);
     // Add the match to the result
     matches.push({
-      text: matchArr[2],
+      text: matchArr[0], //not sure why the 2nd index used to be fetched
       start: start,
-      end: start + length + 1
+      end: start + length
+    
     });
   }
 
@@ -40,14 +42,19 @@ export function findWithRegex(regex, contentBlock, callback) {
  */
 export function getSelectionPosition() {
   const selection = window.getSelection();
+  console.log('getSelectionPosition selection', selection)
 
   if (selection.rangeCount === 0) return null;
 
+  //get the dom element corresponding to the text range being focused on
   const parent = selection.getRangeAt(0).startContainer.parentElement;
+  console.log('getSelectionPosition parent', parent)
+
 
   if (!parent) return null;
 
   const boundingRect = parent.getBoundingClientRect();
+  console.log('getSelectionPosition boundingRect', boundingRect)
 
   return {
     left: boundingRect.left,
