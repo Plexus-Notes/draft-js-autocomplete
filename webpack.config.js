@@ -14,20 +14,20 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.(js|jsx|mjs)$/,
-        include: src,
-        enforce: 'pre',
-        use: [
-          {
-            options: {
-              formatter: eslintFormatter,
-              eslintPath: require.resolve('eslint'),
-            },
-            loader: require.resolve('eslint-loader'),
-          },
-        ],
-      },
+      // {
+      //   test: /\.(js|jsx|mjs)$/,
+      //   include: src,
+      //   enforce: 'pre',
+      //   use: [
+      //     {
+      //       options: {
+      //         formatter: eslintFormatter,
+      //         eslintPath: require.resolve('eslint'),
+      //       },
+      //       loader: require.resolve('eslint-loader'),
+      //     },
+      //   ],
+      // },
       {
         test: /\.jsx?$/,
         include: src,

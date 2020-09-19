@@ -16,7 +16,6 @@ import {
 export function findWithRegex(regex, contentBlock, callback) {
   const text = contentBlock.getText();
   let matchArr, matches = [];
-  console.log("args" , arguments)
   while ((matchArr = regex.exec(text)) !== null) {
     const start = matchArr.index;
     // We trim the match to remove last space
@@ -27,7 +26,7 @@ export function findWithRegex(regex, contentBlock, callback) {
     matches.push({
       text: matchArr[2],
       start: start,
-      end: start + length
+      end: start + length + 1
     });
   }
 
@@ -103,15 +102,13 @@ export function getMatch(editorState, matches) {
   const selectionState = editorState.getSelection();
   const anchorKey = selectionState.getAnchorKey();
 
-  console.log('matches', Object.values(matches)[0])
   // If no matches for this block, no need to continue
   if (!matches[anchorKey]) return null;
   const currentBlockMatches = matches[anchorKey];
 
   //the index where the cursor currently is blinking
   const startOffset = selectionState.getStartOffset();
-
-  console.log('start offSet', startOffset)
+  console.log('current block matches', currentBlockMatches)
 
   // For all matches in this block, we reduce all types
   // to get the first match, return null if no match found
@@ -121,7 +118,11 @@ export function getMatch(editorState, matches) {
       // Reduce all matches to get the first one that is in selection range
       // return null if no match found
       return currentBlockMatches[type].reduce((previous, match) => {
+        console.log('startOffset', startOffset)
         const inOffset = (startOffset >= match.start && startOffset <= match.end);
+        console.log('new potential match,', match);
+        console.log('included in the selection range? ', inOffset)
+
         return !inOffset ? previous : {
           ...match,
           type
@@ -155,12 +156,8 @@ export function getAutocomplete(autocompletes, match) {
  */
 export async function getSuggestions(autocomplete, match, allTextInEditor) {
   if (typeof autocomplete.onMatch !== 'function') return [];
+  
   // Call onMatch method for found autocomplete
-  console.log("match object (should contain text)", match)
-  console.log('autocomplete object.', autocomplete)
-  console.log("allTextInEditor from getSuggestions", allTextInEditor)
-  // return []
-  // return [{firstname: "da", lastname: 'Morse'}, {firstname: "Mon", lastname: "Day"}]
   try {
     var x = await autocomplete.onMatch(allTextInEditor, match)
     return x
@@ -171,7 +168,7 @@ export async function getSuggestions(autocomplete, match, allTextInEditor) {
 
 /**
  * Add entity to editorState and return the new editorState
- *
+ * @TODO take range from the suggestion itself, rather than the other thing
  * @param editorState
  * @param item
  * @param match

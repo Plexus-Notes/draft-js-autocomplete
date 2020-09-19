@@ -92,20 +92,23 @@ class Autocomplete extends Component {
   getDecorator() {
     const { autocompletes, editorState } = this.props;
     const existingDecorators = editorState.getDecorator();
-
-    const strategies = autocompletes.reduce((previous, autocomplete) => {
+    const strategies = autocompletes.reduce((
+      previous, 
+      autocomplete
+      ) => {
       const entityStrategy = {
         strategy: this.createEntityStrategy(autocomplete.type),
         component: autocomplete.component
       };
-      // const autocompleteStrategy = {
-      //   strategy: this.createAutocompleteStrategy(autocomplete),
-      //   component: ({ children }) => (
-      //     <span>{children}</span>
-      //   )
-      // };
-      previous.push(entityStrategy, 
-        // autocompleteStrategy
+      const autocompleteStrategy = {
+        strategy: this.createAutocompleteStrategy(autocomplete),
+        component: ({ children }) => (
+          <span>{children}</span>
+        )
+      };
+      previous.push(
+        entityStrategy, 
+        autocompleteStrategy
         );
       return previous;
     }, existingDecorators ? existingDecorators._decorators : []);
@@ -138,15 +141,24 @@ class Autocomplete extends Component {
 
   /**
    * Create a strategy to isolate text when matching one of autocomplete prop regex
-   *
+   * getting rid of use of prefix
    * @param autocomplete
    * @returns {Function}
    */
   createAutocompleteStrategy(autocomplete) {
     return (contentBlock, callback) => {
-      const reg = new RegExp(String.raw({
-        raw: `(${autocomplete.prefix})(\\S*)(\\s|$)` // eslint-disable-line no-useless-escape
-      }), 'g');
+      // const reg = new RegExp(String.raw({
+      //   // raw: `(${autocomplete.prefix})(\\S*)(\\s|$)` // eslint-disable-line no-useless-escape
+      //   raw: "\s" // eslint-disable-line no-useless-escape
+      // }), 'g');
+      // const reg = /((?<=\s) | ^)|(\S*)/g
+      // const reg = /\b(\S*)\b/
+
+      // const reg = /(?<=(a))/g
+      // const reg = /((?<=\s) | ^)|(\S*)/
+
+      const reg = new RegExp(String.raw({raw: `(\\s|^)(\\S*)`}), 'g')
+      // const reg = new RegExp(String.raw({raw: `((?<=\\s) | ^)|(\\S*)`}), 'g')
       const result = findWithRegex(reg, contentBlock, callback);
       const { matches } = this.state;
       // Create autocompletes object if doesn't exists
@@ -178,29 +190,27 @@ class Autocomplete extends Component {
     if (isCurrentSelectionAnEntity(editorState)) return this.resetMatch();
 
     // If no matches for this block, no need to continue
+    // "Match," as used here, means something that qualifies as a potential entity
+      // the only things that would qualify as potential entities, in my understanding, 
+      // are either accepted suggestions, or the beginning of an entity phrase being typed
+      // @TODO need to figure out how to update the matches to include the recent candidate entities
+
     // const anchorKey = selectionState.getAnchorKey();
     // if (!matches[anchorKey]) return null;
 
-
     // Reset if no match found
     let match = getMatch(editorState, matches);
-
-    // Selection state
-    
+    console.log("The match found", match)
     //where the cursor currently is
-    const selectionState = editorState.getSelection();
-
-
-    console.log('matches', Object.values(matches)[0])
-
-    const startOffset = selectionState.getStartOffset();
+    const startOffset = editorState.getSelection().getStartOffset();
     if (!match) {
-      match = {
-        text: "",
-        start: 0, 
-        end: startOffset,
-        type: "CONCEPT"
-      }
+      return this.resetMatch();
+    // match = {
+    //     text: "",
+    //     start: startOffset, 
+    //     end: startOffset,
+    //     type: "CONCEPT"
+    //   }
     }
 
    
@@ -218,13 +228,23 @@ class Autocomplete extends Component {
 
     // Get suggestions from autocomplete onMatch property
     const allTextInEditor = editorState.getCurrentContent().getPlainText();
-    const suggestions = await getSuggestions(autocomplete, match, allTextInEditor);
+    // const suggestions = await getSuggestions(autocomplete, match, allTextInEditor);
+    const suggestions = autocomplete.onMatch(allTextInEditor, match)
+
+    //my own line to reset match
+    // console.log("suggestions length is zero? ", suggestions.length == 0)
+    if(suggestions.length == 0) {
+      console.log("Match being reset")
+      return this.resetMatch();
+    }
 
     // Update position only if focus
     let position = this.state.match && this.state.match.position ? this.state.match.position : null;
     if (focus) {
       position = getSelectionPosition();
     }
+    console.log('position', position)
+
 
     // New match is a merge of previous data
     const newMatch = {
@@ -298,14 +318,12 @@ class Autocomplete extends Component {
     const { focus, match, selectedSuggestion } = this.state;
 
     if (!match) return null;
-    console.log('nonnull match', match)
 
     const { suggestions, position } = match;
 
     if (!suggestions || suggestions.length === 0) {
       return null
     }
-    console.log('building list!!!')
 
     const List = match.listComponent;
     const Item = match.itemComponent;
