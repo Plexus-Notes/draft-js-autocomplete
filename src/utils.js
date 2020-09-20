@@ -172,7 +172,7 @@ export async function getSuggestions(autocomplete, match, allTextInEditor) {
  * Add entity to editorState and return the new editorState
  * @TODO take range from the suggestion itself, rather than the other thing
  * @param editorState
- * @param item
+ * @param item Suggestion Item Data
  * @param match
  * @returns {*}
  */
