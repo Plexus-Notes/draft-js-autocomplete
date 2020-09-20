@@ -207,7 +207,6 @@ class Autocomplete extends Component {
 
     // Reset if no match found
     let match = getMatch(editorState, matches);
-    console.log("The match found", match)
     //where the cursor currently is
     // const startOffset = editorState.getSelection().getStartOffset();
     if (!match) {
@@ -239,9 +238,7 @@ class Autocomplete extends Component {
     const suggestions = autocomplete.onMatch(allTextInEditor, match)
 
     //my own line to reset match
-    // console.log("suggestions length is zero? ", suggestions.length == 0)
     if(suggestions.length == 0) {
-      console.log("Match being reset")
       return this.resetMatch();
     }
 

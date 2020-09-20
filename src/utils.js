@@ -17,7 +17,6 @@ export function findWithRegex(regex, contentBlock, callback) {
   const text = contentBlock.getText();
   let matchArr, matches = [];
   while ((matchArr = regex.exec(text)) !== null) {
-    console.log('while in regex...', matchArr)
     const start = matchArr.index;
     // We trim the match to remove last space
     const length = matchArr[0].trim().length;
@@ -42,19 +41,19 @@ export function findWithRegex(regex, contentBlock, callback) {
  */
 export function getSelectionPosition() {
   const selection = window.getSelection();
-  console.log('getSelectionPosition selection', selection)
+  // console.log('getSelectionPosition selection', selection)
 
   if (selection.rangeCount === 0) return null;
 
   //get the dom element corresponding to the text range being focused on
   const parent = selection.getRangeAt(0).startContainer.parentElement;
-  console.log('getSelectionPosition parent', parent)
+  // console.log('getSelectionPosition parent', parent)
 
 
   if (!parent) return null;
 
   const boundingRect = parent.getBoundingClientRect();
-  console.log('getSelectionPosition boundingRect', boundingRect)
+  // console.log('getSelectionPosition boundingRect', boundingRect)
 
   return {
     left: boundingRect.left,
@@ -115,7 +114,7 @@ export function getMatch(editorState, matches) {
 
   //the index where the cursor currently is blinking
   const startOffset = selectionState.getStartOffset();
-  console.log('current block matches', currentBlockMatches)
+  // console.log('Current block matches:', currentBlockMatches)
 
   // For all matches in this block, we reduce all types
   // to get the first match, return null if no match found
@@ -125,11 +124,7 @@ export function getMatch(editorState, matches) {
       // Reduce all matches to get the first one that is in selection range
       // return null if no match found
       return currentBlockMatches[type].reduce((previous, match) => {
-        console.log('startOffset', startOffset)
         const inOffset = (startOffset >= match.start && startOffset <= match.end);
-        console.log('new potential match,', match);
-        console.log('included in the selection range? ', inOffset)
-
         return !inOffset ? previous : {
           ...match,
           type
@@ -183,7 +178,8 @@ export async function getSuggestions(autocomplete, match, allTextInEditor) {
  */
 export function addEntityToEditorState(editorState, item, match) {
   // Range text to replace, the type and prefix
-  const { start, end, type, mutability, format } = match;
+  const {end, type, mutability, format } = match;
+  const start = (item.startIndex != undefined) ? item.startIndex : match.start
 
   // Create selection from range
   const currentSelectionState = editorState.getSelection();
@@ -191,7 +187,6 @@ export function addEntityToEditorState(editorState, item, match) {
     anchorOffset: start,
     focusOffset: end,
   });
-
   // Create entity
   const contentState = editorState.getCurrentContent();
   const contentStateWithEntity = contentState.createEntity(
