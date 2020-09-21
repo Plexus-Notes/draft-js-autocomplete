@@ -208,7 +208,6 @@ class Autocomplete extends Component {
     // Reset if no match found
     let match = getMatch(editorState, matches);
     //where the cursor currently is
-    // const startOffset = editorState.getSelection().getStartOffset();
     if (!match) {
       return this.resetMatch();
     // match = {
@@ -232,10 +231,12 @@ class Autocomplete extends Component {
     const autocomplete = getAutocomplete(autocompletes, match);
     if (!autocomplete) return this.resetMatch();
 
+    const startOffset = editorState.getSelection().getStartOffset();
+
     // Get suggestions from autocomplete onMatch property
     const allTextInEditor = editorState.getCurrentContent().getPlainText();
     // const suggestions = await getSuggestions(autocomplete, match, allTextInEditor);
-    const suggestions = autocomplete.onMatch(allTextInEditor, match)
+    const suggestions = autocomplete.onMatch(allTextInEditor, match, startOffset)
 
     //my own line to reset match
     if(suggestions.length == 0) {
