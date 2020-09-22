@@ -178,8 +178,17 @@ export async function getSuggestions(autocomplete, match, allTextInEditor) {
  */
 export function addEntityToEditorState(editorState, item, match) {
   // Range text to replace, the type and prefix
-  const {end, type, mutability, format } = match;
-  const start = (item.startIndex != undefined) ? item.startIndex : match.start
+  const {type, mutability, format } = match;
+
+  item.text = (item.implicitText != undefined) ? item.implicitText : item.suggestedText
+
+  const start = (item.implicitStartIndex != undefined) ? 
+    item.implicitStartIndex 
+    : item.suggestionStartIndex != undefined ? 
+      item.suggestionStartIndex 
+      : match.start
+  const end = (item.implicitEndIndex != undefined) ? item.implicitEndIndex: match.end
+  console.log('start-end', `${start}-${end}`)
 
   // Create selection from range
   const currentSelectionState = editorState.getSelection();
