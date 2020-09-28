@@ -1,12 +1,12 @@
 {
-  "name": "draft-js-autocomplete",
-  "version": "1.0.4",
+  "name": "@plexusnotes/autocomplete",
+  "version": "2.0.1",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Backelite/draft-js-autocomplete.git"
+    "url": "git+https://github.com/Plexus-Notes/draft-js-autocomplete.git"
   },
-  "author": "Laurent Bello <bellolau@gmail.com>",
-  "license": "MIT",
+  "author": "Davey Morse <davey@plexusnotes.com>",
+  "license": "UNLICENSED",
   "main": "dist/index.js",
   "files": [
     "dist/",
@@ -66,10 +66,11 @@
   },
   "description": "This component provide you an easy and quickly way to add autocompletion to [draft-js v0.10](https://draftjs.org/).",
   "bugs": {
-    "url": "https://github.com/Backelite/draft-js-autocomplete/issues"
+    "url": "https://github.com/Plexus-Notes/draft-js-autocomplete/issues"
   },
-  "homepage": "https://github.com/Backelite/draft-js-autocomplete#readme",
+  "homepage": "https://github.com/Plexus-Notes/draft-js-autocomplete",
   "directories": {
     "example": "example"
-  }
+  },
+  "dependencies": {}
 }

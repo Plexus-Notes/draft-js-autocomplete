@@ -1,4 +1,6 @@
-# Draft JS Autocomplete
+# Plexus Autocomplete
+
+A modified version of DraftJS autocomplete for Plexus V1. The modification enables you to trigger a suggestion menu for any word with no regard for a prefix like "@" or "#".
 
 This component provide you an easy and quickly way to add autocompletion to [draft-js v0.10](https://draftjs.org/).
 
@@ -19,23 +21,23 @@ npm install --save draft-js-autocomplete
 You first need to define an autocomplete object like the example below :
 
 ```
-const hashtag = {
-  // The prefix to match to enable this
-  prefix: '#',
+const concept = {
+  // This no longer has any meaning--should be set to the empty string just to be safe.
+  prefix: '',
   // Entity type to be created when an item is selected
-  type: 'HASHTAG',
+  type: 'CONCEPT',
   // Mutability of the entity
   mutability: 'IMMUTABLE',
-  // Callback called when prefix match. Need to return an array of items you want to display
+  // Callback called when prefix match, returning an array of possible suggestions
   onMatch: (text) => hashtags.filter(hashtag => hashtag.indexOf(text) !== -1),
   // The entity component
   component: ({ children }) => (<span className="Hashtag">{children}</span>),
-  // The items list component to use
+  // The items (ie suggestions) list component to use that show up in the suggestions menu
   listComponent: ({ children }) => (<ul className="HashtagList">{children}</ul>),
-  // The item component to use
+  // The item component to use (for individual suggestions in the menu)
   itemComponent: ({ item, onClick }) => (<li onClick={onClick}>{item}</li>),
   // Callback to format the item as it will be displayed into entity
-  format: (item) => `#${item}`
+  format: (item) => `${item}`
 };
 ```
 
@@ -47,12 +49,12 @@ import './App.css';
 import { Editor } from 'draft-js';
 import Autocomplete from 'draft-js-autocomplete';
 
-import hashtag from './autocompletes/hashtag';
+import concept from './autocompletes/hashtag';
 
 class App extends Component {
 
   autocompletes = [
-    hashtag
+    concept
   ];
 
   constructor(props) {
@@ -84,5 +86,4 @@ export default App;
 Autocomplete accept all the props that draft-js Editor component accept as well as an `autocompletes` prop.
 
 ### Example
-
-Check into the `example` folder and its dedicated `README.md`
+Use the commit in DraftPractice repo tagged works-first-npm-publish for an example (will need to link to this autocomplete rather than the local version, though.)
