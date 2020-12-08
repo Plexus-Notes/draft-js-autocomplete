@@ -229,6 +229,8 @@ class Autocomplete extends Component {
 
     // Reset if no autocomplete config found for this match
     const autocomplete = getAutocomplete(autocompletes, match);
+    const currentNodeId = this.getChildren()[0].props.nodeId
+    console.log('id in autocomplete', currentNodeId)
     if (!autocomplete) return this.resetMatch();
 
     const startOffset = editorState.getSelection().getStartOffset();
@@ -236,7 +238,7 @@ class Autocomplete extends Component {
     // Get suggestions from autocomplete onMatch property
     const allTextInEditor = editorState.getCurrentContent().getPlainText();
     // const suggestions = await getSuggestions(autocomplete, match, allTextInEditor);
-    const suggestions = autocomplete.onMatch(allTextInEditor, match, startOffset)
+    const suggestions = autocomplete.onMatch(allTextInEditor, match, startOffset, currentNodeId)
 
     //my own line to reset match
     if(suggestions.length == 0) {
