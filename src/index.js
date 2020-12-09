@@ -230,7 +230,6 @@ class Autocomplete extends Component {
     // Reset if no autocomplete config found for this match
     const autocomplete = getAutocomplete(autocompletes, match);
     const currentNodeId = this.getChildren()[0].props.nodeId
-    console.log('id in autocomplete', currentNodeId)
     if (!autocomplete) return this.resetMatch();
 
     const startOffset = editorState.getSelection().getStartOffset();
@@ -250,7 +249,6 @@ class Autocomplete extends Component {
     if (focus) {
       position = getSelectionPosition();
     }
-    console.log('position', position)
 
 
     // New match is a merge of previous data
