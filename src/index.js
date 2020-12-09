@@ -196,6 +196,9 @@ class Autocomplete extends Component {
     // Reset if selection (to 0) is an entity
     if (isCurrentSelectionAnEntity(editorState)) return this.resetMatch();
 
+    // Reset if focus is false
+    if(!focus) return this.resetMatch()
+
     // If no matches for this block, no need to continue
     // "Match," as used here, means something that qualifies as a potential entity
       // the only things that would qualify as potential entities, in my understanding, 

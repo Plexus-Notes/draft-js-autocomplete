@@ -188,7 +188,7 @@ export function addEntityToEditorState(editorState, item, match) {
       item.suggestionStartIndex 
       : match.start
   const end = (item.implicitEndIndex != undefined) ? item.implicitEndIndex: match.end
-  console.log('start-end', `${start}-${end}`)
+  // console.log('start-end', `${start}-${end}`)
 
   // Create selection from range
   const currentSelectionState = editorState.getSelection();
