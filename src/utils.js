@@ -41,19 +41,24 @@ export function findWithRegex(regex, contentBlock, callback) {
  */
 export function getSelectionPosition() {
   const selection = window.getSelection();
-  // console.log('getSelectionPosition selection', selection)
+  // console.log('getSelectionPosition window selection', selection)
 
   if (selection.rangeCount === 0) return null;
 
   //get the dom element corresponding to the text range being focused on
+
+  /**
+   * @TODO need to make sure parent is the right parent
+   */
   const parent = selection.getRangeAt(0).startContainer.parentElement;
-  // console.log('getSelectionPosition parent', parent)
+  console.log('getSelectionPosition parent', parent)
 
 
   if (!parent) return null;
 
   const boundingRect = parent.getBoundingClientRect();
-  // console.log('getSelectionPosition boundingRect', boundingRect)
+  console.log('getSelectionPosition bounding rect', boundingRect)
+
 
   return {
     left: boundingRect.left,
