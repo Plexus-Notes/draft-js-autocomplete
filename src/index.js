@@ -17,6 +17,7 @@ import {
   isCurrentTextEmpty,
   isCurrentSelectionAnEntity
 } from './utils';
+// import { getSuggestionsSlow } from './sampleAsyncFunction';
 
 class Autocomplete extends Component {
   static propTypes = {
@@ -239,9 +240,7 @@ class Autocomplete extends Component {
 
     // Get suggestions from autocomplete onMatch property
     const allTextInEditor = editorState.getCurrentContent().getPlainText();
-    // const suggestions = await getSuggestions(autocomplete, match, allTextInEditor);
-    const suggestions = autocomplete.onMatch(allTextInEditor, match, startOffset, currentNodeId)
-
+      const suggestions = autocomplete.onMatch(allTextInEditor, match, startOffset, currentNodeId)
 
     //Maybe update position in a different location
     //my own line to reset match
@@ -252,7 +251,7 @@ class Autocomplete extends Component {
       position = getSelectionPosition();
 
     } 
-    
+
     if(!position) {
       return this.resetMatch()
     }
