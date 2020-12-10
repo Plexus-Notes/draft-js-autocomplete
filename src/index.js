@@ -242,21 +242,30 @@ class Autocomplete extends Component {
     // const suggestions = await getSuggestions(autocomplete, match, allTextInEditor);
     const suggestions = autocomplete.onMatch(allTextInEditor, match, startOffset, currentNodeId)
 
+
+    //Maybe update position in a different location
     //my own line to reset match
     let position;
+    // Update position only if focus
+    position = this.state.match && this.state.match.position ? this.state.match.position : null;
+    if (focus) {
+      position = getSelectionPosition();
+
+    } 
+    
+    if(!position) {
+      return this.resetMatch()
+    }
+
+
     if(suggestions.length == 0) {
       return this.resetMatch();
-    } else {
-      // Update position only if focus
-      position = this.state.match && this.state.match.position ? this.state.match.position : null;
-      if (focus) {
-        position = getSelectionPosition();
-      } 
     }
+     
+    
 
     
 
-    console.log('position', position)
 
     // New match is a merge of previous data
     const newMatch = {

@@ -40,8 +40,9 @@ export function findWithRegex(regex, contentBlock, callback) {
  * @returns {{left: number, right: number, top: number, bottom: number}}
  */
 export function getSelectionPosition() {
-  const selection = window.getSelection();
+  const selection = document.getSelection();
   // console.log('getSelectionPosition window selection', selection)
+
 
   if (selection.rangeCount === 0) return null;
 
@@ -51,14 +52,11 @@ export function getSelectionPosition() {
    * @TODO need to make sure parent is the right parent
    */
   const parent = selection.getRangeAt(0).startContainer.parentElement;
-  console.log('getSelectionPosition parent', parent)
 
-
-  if (!parent) return null;
+const tagName = parent.tagName
+  if (!parent || tagName !== 'SPAN') return null;
 
   const boundingRect = parent.getBoundingClientRect();
-  console.log('getSelectionPosition bounding rect', boundingRect)
-
 
   return {
     left: boundingRect.left,
